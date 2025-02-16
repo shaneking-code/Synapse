@@ -15,6 +15,7 @@ function App() {
   const [results, setResults] = useState<SearchResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [status, setStatus] = useState('');
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,6 +23,9 @@ function App() {
 
     setIsLoading(true);
     setError('');
+    setStatus('');
+
+    const startTime = performance.now();
 
     try {
       const response = await fetch(`http://localhost:8000/search?query=${encodeURIComponent(query)}&k=5`);
@@ -29,6 +33,10 @@ function App() {
       
       const data = await response.json();
       setResults(data);
+
+      const endTime = performance.now();
+      const timeTaken = ((endTime - startTime) / 1000).toFixed(2);
+      setStatus(`Returned ${data.length} results in ${timeTaken} seconds`);
     } catch (err) {
       setError('Failed to perform search. Please try again.');
       console.error(err);
@@ -77,6 +85,8 @@ function App() {
         </form>
 
         {error && <div className="error">{error}</div>}
+
+        {status && <div className="status">{status}</div>}
 
         <div className="results">
           {results.map((result, index) => (

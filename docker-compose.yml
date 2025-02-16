@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: ./api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app
+
+  app:
+    build:
+      context: ./app
+    ports:
+      - "3000:80"
+    volumes:
+      - ./app:/app
+      
